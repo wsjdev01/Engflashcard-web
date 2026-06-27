@@ -28,17 +28,24 @@
       margin-bottom: 16px;
     }
 
+    .card-wrapper {
+      width: 100%;
+      max-width: 480px;
+      overflow: hidden;
+    }
+
     .card {
       background: white;
       border-radius: 16px;
       padding: 28px 24px;
       width: 100%;
-      max-width: 480px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.08);
       min-height: 400px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      user-select: none;
+      transition: transform 0.15s ease, opacity 0.15s ease;
     }
 
     .top-section {
@@ -92,16 +99,27 @@
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
+      transition: opacity 0.2s;
     }
 
     .btn-prev {
       background: #e8e8e8;
-      color: #555;
+      color: #aaa;
+    }
+
+    .btn-prev.active {
+      background: #4A90E2;
+      color: white;
     }
 
     .btn-next {
       background: #4A90E2;
       color: white;
+    }
+
+    .btn-next.disabled {
+      background: #e8e8e8;
+      color: #aaa;
     }
 
     .loading {
@@ -119,16 +137,17 @@
 <body>
 
   <div class="counter" id="counter"></div>
-  <div class="card" id="card">
-    <div class="loading">불러오는 중...</div>
+  <div class="card-wrapper">
+    <div class="card" id="card">
+      <div class="loading">불러오는 중...</div>
+    </div>
   </div>
   <div class="nav">
-    <button class="btn-prev" onclick="prevCard()">← 이전</button>
-    <button class="btn-next" onclick="nextCard()">다음 →</button>
+    <button class="btn-prev" id="btnPrev" onclick="prevCard()">← 이전</button>
+    <button class="btn-next" id="btnNext" onclick="nextCard()">다음 →</button>
   </div>
 
   <script>
-    // ⬇️ 여기에 구글 시트 CSV 링크를 붙여넣으세요
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTw9hzCMBy2uKaS5VP5oc5ShljTICePzVFr6bqbrnXoHoqsziFvFNiCZuipqBqf28bQMCE-swMWACbH/pub?gid=0&single=true&output=csv';
 
     let cards = [];
@@ -154,6 +173,23 @@
       }).filter(c => c.english);
     }
 
+    function updateButtons() {
+      const btnPrev = document.getElementById('btnPrev');
+      const btnNext = document.getElementById('btnNext');
+
+      if (currentIndex === 0) {
+        btnPrev.classList.remove('active');
+      } else {
+        btnPrev.classList.add('active');
+      }
+
+      if (currentIndex === cards.length - 1) {
+        btnNext.classList.add('disabled');
+      } else {
+        btnNext.classList.remove('disabled');
+      }
+    }
+
     function renderCard() {
       const card = cards[currentIndex];
       document.getElementById('counter').textContent = `${currentIndex + 1} / ${cards.length}`;
@@ -165,6 +201,7 @@
         <hr class="divider">
         <div class="english">${card.english}</div>
       `;
+      updateButtons();
     }
 
     function nextCard() {
@@ -180,6 +217,26 @@
         renderCard();
       }
     }
+
+    // 스와이프 기능
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    const cardEl = document.getElementById('card');
+
+    document.addEventListener('touchstart', e => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    });
+
+    document.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+        if (dx < 0) nextCard();
+        else prevCard();
+      }
+    });
 
     async function loadCards() {
       try {
