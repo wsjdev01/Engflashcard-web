@@ -237,16 +237,15 @@
     }
 
     function speakEnglish() {
-      speechSynthesis.cancel();
-      setTimeout(() => {
-        const utterance = new SpeechSynthesisUtterance(cards[currentIndex].english);
-        utterance.lang = 'en-US';
-        utterance.rate = 0.9;
-        const voices = speechSynthesis.getVoices();
-        const engVoice = voices.find(v => v.lang.startsWith('en'));
-        if (engVoice) utterance.voice = engVoice;
-        speechSynthesis.speak(utterance);
-      }, 100);
+      if (!window.speechSynthesis) {
+        alert('이 브라우저는 음성 기능을 지원하지 않아요.');
+        return;
+      }
+      const utterance = new SpeechSynthesisUtterance(cards[currentIndex].english);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      utterance.volume = 1;
+      window.speechSynthesis.speak(utterance);
     }
 
     // 스와이프 기능
