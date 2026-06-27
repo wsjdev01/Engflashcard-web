@@ -237,11 +237,16 @@
     }
 
     function speakEnglish() {
-      const utterance = new SpeechSynthesisUtterance(cards[currentIndex].english);
-      utterance.lang = 'en-US';
-      utterance.rate = 0.9;
       speechSynthesis.cancel();
-      speechSynthesis.speak(utterance);
+      setTimeout(() => {
+        const utterance = new SpeechSynthesisUtterance(cards[currentIndex].english);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.9;
+        const voices = speechSynthesis.getVoices();
+        const engVoice = voices.find(v => v.lang.startsWith('en'));
+        if (engVoice) utterance.voice = engVoice;
+        speechSynthesis.speak(utterance);
+      }, 100);
     }
 
     // 스와이프 기능
