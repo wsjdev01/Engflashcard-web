@@ -147,8 +147,8 @@
       return lines.slice(1).map(line => {
         const cols = line.split(',');
         return {
-          english: (cols[0] || '').trim().replace(/^"|"$/g, ''),
-          meaning: (cols[1] || '').trim().replace(/^"|"$/g, ''),
+          meaning: (cols[0] || '').trim().replace(/^"|"$/g, ''),
+          english: (cols[1] || '').trim().replace(/^"|"$/g, ''),
           explanation: (cols[2] || '').trim().replace(/^"|"$/g, ''),
         };
       }).filter(c => c.english);
