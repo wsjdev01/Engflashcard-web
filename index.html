@@ -132,6 +132,23 @@
       font-size: 14px;
       text-align: center;
     }
+
+    .btn-speak {
+      margin-top: 10px;
+      background: none;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 14px;
+      color: #555;
+      cursor: pointer;
+      flex: none;
+      width: auto;
+    }
+
+    .btn-speak:active {
+      background: #f0f0f0;
+    }
   </style>
 </head>
 <body>
@@ -200,6 +217,7 @@
         </div>
         <hr class="divider">
         <div class="english">${card.english}</div>
+        <button class="btn-speak" onclick="speakEnglish()">🔊 듣기</button>
       `;
       updateButtons();
     }
@@ -216,6 +234,14 @@
         currentIndex--;
         renderCard();
       }
+    }
+
+    function speakEnglish() {
+      const utterance = new SpeechSynthesisUtterance(cards[currentIndex].english);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.9;
+      speechSynthesis.cancel();
+      speechSynthesis.speak(utterance);
     }
 
     // 스와이프 기능
