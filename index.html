@@ -150,6 +150,7 @@
 
   <script>
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTw9hzCMBy2uKaS5VP5oc5ShljTICePzVFr6bqbrnXoHoqsziFvFNiCZuipqBqf28bQMCE-swMWACbH/pub?gid=0&single=true&output=csv';
+    const STORAGE_KEY = 'engflashcard_state';
 
     let cards = [];
     let currentIndex = 0;
@@ -194,6 +195,13 @@
       }).filter(c => c.english);
     }
 
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        cards: cards,
+        index: currentIndex
+      }));
+    }
+
     function updateButtons() {
       const btnPrev = document.getElementById('btnPrev');
       const btnNext = document.getElementById('btnNext');
@@ -229,6 +237,7 @@
       if (currentIndex < cards.length - 1) {
         currentIndex++;
         renderCard();
+        saveState();
       }
     }
 
@@ -236,14 +245,13 @@
       if (currentIndex > 0) {
         currentIndex--;
         renderCard();
+        saveState();
       }
     }
 
     // 스와이프 기능
     let touchStartX = 0;
     let touchStartY = 0;
-
-    const cardEl = document.getElementById('card');
 
     document.addEventListener('touchstart', e => {
       touchStartX = e.touches[0].clientX;
@@ -263,7 +271,18 @@
       try {
         const res = await fetch(CSV_URL);
         const text = await res.text();
-        cards = shuffle(parseCSV(text));
+        const fetched = parseCSV(text);
+
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+        if (saved && saved.cards && saved.cards.length === fetched.length) {
+          cards = saved.cards;
+          currentIndex = saved.index || 0;
+        } else {
+          cards = shuffle(fetched);
+          currentIndex = 0;
+          saveState();
+        }
+
         renderCard();
       } catch (e) {
         document.getElementById('card').innerHTML = `<div class="error">데이터를 불러오지 못했어요.<br>CSV 링크를 확인해주세요.</div>`;
