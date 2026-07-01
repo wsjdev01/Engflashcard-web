@@ -69,7 +69,6 @@
     }
     .menu-item:last-child { border-bottom: none; }
     .menu-item:active { background: #f5f5f5; }
-    .menu-item.danger { font-size: 13px; color: #bbb; }
 
     /* ── Main view ── */
     .main-view {
@@ -256,7 +255,6 @@
     <div class="menu-item" onclick="showList('seen')">공부한 카드</div>
     <div class="menu-item" onclick="showList('bookmarked')">저장한 카드</div>
     <div class="menu-item" onclick="goToLatest()">이어보기</div>
-    <div class="menu-item danger" onclick="confirmReset()">처음부터 다시</div>
   </div>
 
   <!-- Main view -->
@@ -425,18 +423,6 @@
     function closeMenu() {
       document.getElementById('menu').classList.remove('open');
       document.getElementById('menuOverlay').classList.remove('open');
-    }
-
-    function confirmReset() {
-      closeMenu();
-      if (confirm('모든 학습 기록이 초기화됩니다.\n처음부터 다시 시작할까요?')) {
-        bookmarks = new Set();
-        highWaterMark = 0;
-        currentIndex = 0;
-        cards = shuffle(cards);
-        saveState();
-        renderCard();
-      }
     }
 
     // ── List view ─────────────────────────────────────────────
