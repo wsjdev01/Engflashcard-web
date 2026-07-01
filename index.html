@@ -5,34 +5,83 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>영어 플래시카드</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background: #f5f5f5;
       min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px 0;
+      max-width: 480px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .counter { font-size: 14px; color: #999; }
+
+    .hamburger {
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      color: #555;
+      padding: 4px 8px;
+      border-radius: 8px;
+      line-height: 1;
+    }
+
+    /* ── Dropdown menu ── */
+    .menu-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+    }
+    .menu-overlay.open { display: block; }
+
+    .menu {
+      display: none;
+      position: fixed;
+      top: 52px;
+      right: 16px;
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+      z-index: 11;
+      min-width: 200px;
+      overflow: hidden;
+    }
+    .menu.open { display: block; }
+
+    .menu-item {
+      padding: 15px 20px;
+      font-size: 15px;
+      color: #1a1a1a;
+      cursor: pointer;
+      border-bottom: 1px solid #f2f2f2;
+    }
+    .menu-item:last-child { border-bottom: none; }
+    .menu-item:active { background: #f5f5f5; }
+    .menu-item.danger { font-size: 13px; color: #bbb; }
+
+    /* ── Main view ── */
+    .main-view {
       display: flex;
       flex-direction: column;
       align-items: center;
+      padding: 16px 20px 20px;
+      min-height: calc(100vh - 48px);
       justify-content: center;
-      padding: 20px;
     }
 
-    .counter {
-      font-size: 14px;
-      color: #999;
-      margin-bottom: 16px;
-    }
-
-    .card-wrapper {
-      width: 100%;
-      max-width: 480px;
-      overflow: hidden;
-    }
+    .card-wrapper { width: 100%; max-width: 480px; }
 
     .card {
       background: white;
@@ -45,12 +94,23 @@
       flex-direction: column;
       justify-content: space-between;
       user-select: none;
-      transition: transform 0.15s ease, opacity 0.15s ease;
+      position: relative;
     }
 
-    .top-section {
-      flex: 1;
+    .bookmark-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      padding: 4px;
+      line-height: 1;
+      color: #f5a623;
     }
+
+    .top-section { flex: 1; padding-right: 32px; }
 
     .meaning {
       font-size: 20px;
@@ -91,7 +151,7 @@
       max-width: 480px;
     }
 
-    button {
+    .nav button {
       flex: 1;
       padding: 14px;
       border: none;
@@ -99,52 +159,132 @@
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
-      transition: opacity 0.2s;
     }
 
-    .btn-prev {
-      background: #e8e8e8;
-      color: #aaa;
+    .btn-prev { background: #e8e8e8; color: #aaa; }
+    .btn-prev.active { background: #4A90E2; color: white; }
+    .btn-next { background: #4A90E2; color: white; }
+    .btn-next.disabled { background: #e8e8e8; color: #aaa; }
+
+    /* ── List view ── */
+    .list-view {
+      display: none;
+      flex-direction: column;
+      min-height: 100vh;
+      background: #f5f5f5;
+    }
+    .list-view.open { display: flex; }
+
+    .list-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      background: white;
+      border-bottom: 1px solid #ebebeb;
     }
 
-    .btn-prev.active {
-      background: #4A90E2;
-      color: white;
-    }
-
-    .btn-next {
-      background: #4A90E2;
-      color: white;
-    }
-
-    .btn-next.disabled {
-      background: #e8e8e8;
-      color: #aaa;
-    }
-
-    .loading {
-      color: #999;
+    .list-back {
+      background: none;
+      border: none;
       font-size: 16px;
+      color: #4A90E2;
+      cursor: pointer;
+      font-weight: 600;
+      padding: 0;
+      flex-shrink: 0;
     }
 
-    .error {
-      color: #e74c3c;
-      font-size: 14px;
-      text-align: center;
+    .list-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
     }
+
+    .list-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 20px 20px;
+      max-width: 520px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .list-item {
+      background: white;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .list-item:active { background: #f0f7ff; }
+
+    .list-item-num {
+      font-size: 12px;
+      color: #ccc;
+      min-width: 28px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .list-item-meaning {
+      font-size: 15px;
+      color: #1a1a1a;
+      line-height: 1.4;
+    }
+
+    .empty-msg {
+      text-align: center;
+      color: #bbb;
+      font-size: 15px;
+      margin-top: 80px;
+    }
+
+    .loading { color: #999; font-size: 16px; }
+    .error { color: #e74c3c; font-size: 14px; text-align: center; }
   </style>
 </head>
 <body>
 
-  <div class="counter" id="counter"></div>
-  <div class="card-wrapper">
-    <div class="card" id="card">
-      <div class="loading">불러오는 중...</div>
+  <!-- Dropdown menu -->
+  <div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+  <div class="menu" id="menu">
+    <div class="menu-item" onclick="showList('seen')">공부한 카드</div>
+    <div class="menu-item" onclick="showList('bookmarked')">저장한 카드</div>
+    <div class="menu-item" onclick="goToLatest()">이어보기</div>
+    <div class="menu-item danger" onclick="confirmReset()">처음부터 다시</div>
+  </div>
+
+  <!-- Main view -->
+  <div id="mainView">
+    <div class="header">
+      <div class="counter" id="counter"></div>
+      <button class="hamburger" onclick="toggleMenu()">☰</button>
+    </div>
+    <div class="main-view">
+      <div class="card-wrapper">
+        <div class="card" id="card">
+          <div class="loading">불러오는 중...</div>
+        </div>
+      </div>
+      <div class="nav">
+        <button class="btn-prev" id="btnPrev" onclick="prevCard()">← 이전</button>
+        <button class="btn-next" id="btnNext" onclick="nextCard()">다음 →</button>
+      </div>
     </div>
   </div>
-  <div class="nav">
-    <button class="btn-prev" id="btnPrev" onclick="prevCard()">← 이전</button>
-    <button class="btn-next" id="btnNext" onclick="nextCard()">다음 →</button>
+
+  <!-- List view -->
+  <div class="list-view" id="listView">
+    <div class="list-header">
+      <button class="list-back" onclick="closeList()">← 돌아가기</button>
+      <span class="list-title" id="listTitle"></span>
+    </div>
+    <div class="list-content" id="listContent"></div>
   </div>
 
   <script>
@@ -153,16 +293,11 @@
 
     let cards = [];
     let currentIndex = 0;
+    let highWaterMark = 0;
+    let bookmarks = new Set();
     let googleSheetKeys = [];
 
-    function shuffle(array) {
-      const arr = [...array];
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    }
+    // ── CSV ──────────────────────────────────────────────────
 
     function parseCSVLine(line) {
       const result = [];
@@ -171,7 +306,7 @@
       for (let i = 0; i < line.length; i++) {
         const ch = line[i];
         if (ch === '"') {
-          if (inQuotes && line[i + 1] === '"') { current += '"'; i++; }
+          if (inQuotes && line[i+1] === '"') { current += '"'; i++; }
           else inQuotes = !inQuotes;
         } else if (ch === ',' && !inQuotes) {
           result.push(current.trim());
@@ -188,21 +323,11 @@
       const lines = text.trim().split('\n');
       return lines.slice(1).map(line => {
         const cols = parseCSVLine(line);
-        return {
-          meaning: cols[0] || '',
-          english: cols[1] || '',
-          explanation: cols[2] || '',
-        };
+        return { meaning: cols[0]||'', english: cols[1]||'', explanation: cols[2]||'' };
       }).filter(c => c.english);
     }
 
-    function isReordered(oldKeys, newKeys) {
-      const newSet = new Set(newKeys);
-      const oldSet = new Set(oldKeys);
-      const oldCommon = oldKeys.filter(k => newSet.has(k));
-      const newCommon = newKeys.filter(k => oldSet.has(k));
-      return oldCommon.join('||') !== newCommon.join('||');
-    }
+    // ── State ────────────────────────────────────────────────
 
     function cardKey(c) {
       return c.english + '||' + c.meaning + '||' + c.explanation;
@@ -210,12 +335,16 @@
 
     function saveState() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        seen: cards.slice(0, currentIndex + 1),
-        unseen: cards.slice(currentIndex + 1),
+        seen: cards.slice(0, highWaterMark + 1),
+        unseen: cards.slice(highWaterMark + 1),
         currentIndex,
+        highWaterMark,
+        bookmarks: [...bookmarks],
         googleSheetKeys
       }));
     }
+
+    // ── Render ───────────────────────────────────────────────
 
     function updateButtons() {
       const btnPrev = document.getElementById('btnPrev');
@@ -228,8 +357,10 @@
 
     function renderCard() {
       const card = cards[currentIndex];
+      const isBookmarked = bookmarks.has(card.english);
       document.getElementById('counter').textContent = `${currentIndex + 1} / ${cards.length}`;
       document.getElementById('card').innerHTML = `
+        <button class="bookmark-btn" onclick="toggleBookmark()">${isBookmarked ? '★' : '☆'}</button>
         <div class="top-section">
           <div class="meaning">${card.meaning}</div>
           ${card.explanation ? `<div class="explanation">${card.explanation}</div>` : ''}
@@ -240,9 +371,12 @@
       updateButtons();
     }
 
+    // ── Navigation ───────────────────────────────────────────
+
     function nextCard() {
       if (currentIndex < cards.length - 1) {
         currentIndex++;
+        if (currentIndex > highWaterMark) highWaterMark = currentIndex;
         renderCard();
         saveState();
       }
@@ -256,7 +390,95 @@
       }
     }
 
-    // 스와이프 기능
+    function goToCard(index) {
+      currentIndex = index;
+      closeMenu();
+      closeList();
+      renderCard();
+      saveState();
+    }
+
+    function goToLatest() {
+      currentIndex = highWaterMark;
+      closeMenu();
+      renderCard();
+      saveState();
+    }
+
+    // ── Bookmark ─────────────────────────────────────────────
+
+    function toggleBookmark() {
+      const key = cards[currentIndex].english;
+      if (bookmarks.has(key)) bookmarks.delete(key);
+      else bookmarks.add(key);
+      renderCard();
+      saveState();
+    }
+
+    // ── Menu ─────────────────────────────────────────────────
+
+    function toggleMenu() {
+      document.getElementById('menu').classList.toggle('open');
+      document.getElementById('menuOverlay').classList.toggle('open');
+    }
+
+    function closeMenu() {
+      document.getElementById('menu').classList.remove('open');
+      document.getElementById('menuOverlay').classList.remove('open');
+    }
+
+    function confirmReset() {
+      closeMenu();
+      if (confirm('모든 학습 기록이 초기화됩니다.\n처음부터 다시 시작할까요?')) {
+        bookmarks = new Set();
+        highWaterMark = 0;
+        currentIndex = 0;
+        cards = shuffle(cards);
+        saveState();
+        renderCard();
+      }
+    }
+
+    // ── List view ─────────────────────────────────────────────
+
+    function showList(type) {
+      closeMenu();
+      const listTitle = document.getElementById('listTitle');
+      const listContent = document.getElementById('listContent');
+
+      let items = [];
+      if (type === 'seen') {
+        listTitle.textContent = '공부한 카드';
+        items = cards.slice(0, highWaterMark + 1).map((c, i) => ({ card: c, num: i + 1, index: i }));
+      } else {
+        listTitle.textContent = '저장한 카드';
+        items = cards
+          .map((c, i) => ({ card: c, num: i + 1, index: i }))
+          .filter(({ card }) => bookmarks.has(card.english));
+      }
+
+      if (items.length === 0) {
+        listContent.innerHTML = `<div class="empty-msg">${type === 'seen' ? '아직 공부한 카드가 없어요.' : '저장한 카드가 없어요. 카드에서 ☆ 를 눌러보세요!'}</div>`;
+      } else {
+        listContent.innerHTML = items.map(({ card, num, index }) => `
+          <div class="list-item" onclick="goToCard(${index})">
+            <div class="list-item-num">${num}</div>
+            <div class="list-item-meaning">${card.meaning}</div>
+          </div>
+        `).join('');
+      }
+
+      document.getElementById('mainView').style.display = 'none';
+      document.getElementById('listView').classList.add('open');
+    }
+
+    function closeList() {
+      document.getElementById('listView').classList.remove('open');
+      document.getElementById('mainView').style.display = 'block';
+    }
+
+    // ── Swipe ─────────────────────────────────────────────────
+
     let touchStartX = 0;
     let touchStartY = 0;
 
@@ -266,6 +488,7 @@
     });
 
     document.addEventListener('touchend', e => {
+      if (document.getElementById('listView').classList.contains('open')) return;
       const dx = e.changedTouches[0].clientX - touchStartX;
       const dy = e.changedTouches[0].clientY - touchStartY;
       if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
@@ -273,6 +496,27 @@
         else prevCard();
       }
     });
+
+    // ── Shuffle ───────────────────────────────────────────────
+
+    function shuffle(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // ── Load ──────────────────────────────────────────────────
+
+    function isReordered(oldKeys, newKeys) {
+      const newSet = new Set(newKeys);
+      const oldSet = new Set(oldKeys);
+      const oldCommon = oldKeys.filter(k => newSet.has(k));
+      const newCommon = newKeys.filter(k => oldSet.has(k));
+      return oldCommon.join('||') !== newCommon.join('||');
+    }
 
     async function loadCards() {
       try {
@@ -284,60 +528,52 @@
 
         const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
 
-        // 처음 접속
         if (!saved) {
           googleSheetKeys = newKeys;
           cards = shuffle(fetched);
           currentIndex = 0;
+          highWaterMark = 0;
+          bookmarks = new Set();
           saveState();
           renderCard();
           return;
         }
 
+        bookmarks = new Set(saved.bookmarks || []);
         const oldKeys = saved.googleSheetKeys || [];
 
-        // 순서 변경 감지 → 전체 리셔플
         if (isReordered(oldKeys, newKeys)) {
           googleSheetKeys = newKeys;
           cards = shuffle(fetched);
           currentIndex = 0;
+          highWaterMark = 0;
           saveState();
           renderCard();
           return;
         }
 
-        // seen 처리: 삭제된 카드 제거, 내용 변경된 카드는 unseen으로
+        // Seen: 삭제된 카드 제거, 내용 변경된 카드 → unseen으로
         const seenCards = [];
         const contentChangedCards = [];
         for (const c of (saved.seen || [])) {
           const newCard = newMap.get(c.english);
-          if (!newCard) continue; // 삭제된 카드
-          if (cardKey(newCard) !== cardKey(c)) {
-            contentChangedCards.push(newCard); // 내용 변경 → unseen으로
-          } else {
-            seenCards.push(newCard);
-          }
+          if (!newCard) continue;
+          if (cardKey(newCard) !== cardKey(c)) contentChangedCards.push(newCard);
+          else seenCards.push(newCard);
         }
 
-        // unseen 처리: 삭제된 카드 제거, 내용 변경된 카드는 최신 내용으로 업데이트
-        const seenSet = new Set(seenCards.map(c => c.english));
         const existingUnseen = (saved.unseen || [])
           .filter(c => newMap.has(c.english))
           .map(c => newMap.get(c.english));
 
-        // 신규 카드 (seen에도 unseen에도 없는 것)
-        const knownKeys = new Set([
-          ...seenCards.map(c => c.english),
-          ...existingUnseen.map(c => c.english)
-        ]);
+        const knownKeys = new Set([...seenCards.map(c => c.english), ...existingUnseen.map(c => c.english)]);
         const newCards = fetched.filter(c => !knownKeys.has(c.english));
-
-        // unseen = 기존 unseen + 내용변경된 카드 + 신규 카드 (섞기)
         const mergedUnseen = shuffle([...existingUnseen, ...contentChangedCards, ...newCards]);
 
         googleSheetKeys = newKeys;
         cards = [...seenCards, ...mergedUnseen];
-        currentIndex = seenCards.length > 0 ? seenCards.length - 1 : 0;
+        highWaterMark = seenCards.length > 0 ? seenCards.length - 1 : 0;
+        currentIndex = highWaterMark;
 
         saveState();
         renderCard();
