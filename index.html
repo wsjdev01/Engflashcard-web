@@ -142,6 +142,13 @@
       font-style: italic;
     }
 
+    .source {
+      font-size: 11px;
+      color: #ccc;
+      text-align: right;
+      margin-top: 10px;
+    }
+
     .nav {
       display: flex;
       gap: 12px;
@@ -321,7 +328,7 @@
       const lines = text.trim().split('\n');
       return lines.slice(1).map(line => {
         const cols = parseCSVLine(line);
-        return { meaning: cols[0]||'', english: cols[1]||'', explanation: cols[2]||'' };
+        return { meaning: cols[0]||'', english: cols[1]||'', explanation: cols[2]||'', source: cols[3]||'' };
       }).filter(c => c.english);
     }
 
@@ -365,6 +372,7 @@
         </div>
         <hr class="divider">
         <div class="english">${card.english}</div>
+        ${card.source ? `<div class="source">${card.source}</div>` : ''}
       `;
       updateButtons();
     }
