@@ -320,6 +320,11 @@
 
     function enterDeck(deckId) {
       currentDeckId = deckId;
+      cards = [];
+      currentIndex = 0;
+      highWaterMark = 0;
+      bookmarks = new Set();
+      googleSheetKeys = [];
       document.getElementById('homeView').classList.add('hidden');
       document.getElementById('cardView').classList.remove('hidden');
       loadCards();
@@ -498,6 +503,10 @@
         const res = await fetch(deck.csvUrl);
         const text = await res.text();
         const fetched = parseCSV(text);
+        if (fetched.length === 0) {
+          document.getElementById('card').innerHTML = `<div class="error" style="margin-top:40px">아직 카드가 없어요.<br>구글시트에 문장을 추가해보세요!</div>`;
+          return;
+        }
         const newKeys = fetched.map(c => c.english);
         const newMap = new Map(fetched.map(c => [c.english, c]));
         const saved = JSON.parse(localStorage.getItem(deck.storageKey) || 'null');
