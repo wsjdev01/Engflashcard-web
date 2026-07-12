@@ -602,19 +602,16 @@
     window.addEventListener('popstate', () => {
       if (isListOpen()) {
         closeList();
-        history.pushState({ appGuard: true }, '', location.href);
-        return;
-      }
-      if (isCardViewOpen()) {
-        exitDeck();
-        history.pushState({ appGuard: true }, '', location.href);
-        return;
-      }
-      if (confirm('앱을 종료하시겠습니까?')) {
-        history.back();
+      } else if (isCardViewOpen()) {
+        if (currentIndex > 0) prevCard();
+        else exitDeck();
       } else {
-        history.pushState({ appGuard: true }, '', location.href);
+        if (confirm('앱을 종료하시겠습니까?')) {
+          history.back();
+          return;
+        }
       }
+      history.pushState({ appGuard: true }, '', location.href);
     });
   </script>
 </body>
