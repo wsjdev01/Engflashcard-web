@@ -187,6 +187,29 @@
     .error { color: #e74c3c; font-size: 14px; text-align: center; }
 
     .hidden { display: none !important; }
+
+    /* ── Exit toast ── */
+    .exit-toast {
+      position: fixed;
+      left: 50%;
+      bottom: 40px;
+      transform: translateX(-50%) translateY(10px);
+      background: rgba(26,26,26,0.9);
+      color: white;
+      font-size: 14px;
+      padding: 12px 20px;
+      border-radius: 24px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 100;
+      white-space: nowrap;
+    }
+    .exit-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
   </style>
 </head>
 <body>
@@ -214,6 +237,9 @@
       </div>
     </div>
   </div>
+
+  <!-- Exit toast -->
+  <div id="exitToast" class="exit-toast">뒤로가기를 한 번 더 누르면 종료됩니다</div>
 
   <!-- Dropdown menu -->
   <div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
@@ -587,7 +613,7 @@
 
     // ── Back button guard ───────────────────────────────────────
     // 안드로이드/브라우저 뒤로가기 시 바로 종료되지 않도록 history에 buffer entry를 유지한다.
-    // 카드뷰/리스트뷰에서는 앱 내 뒤로가기로 처리하고, 홈 화면에서만 종료 확인창을 띄운다.
+    // 카드뷰/리스트뷰에서는 앱 내 뒤로가기로 처리하고, 홈 화면에서는 "한 번 더 누르면 종료" 토스트를 띄운다.
 
     function isListOpen() {
       return document.getElementById('listView').classList.contains('open');
@@ -595,6 +621,17 @@
 
     function isCardViewOpen() {
       return !document.getElementById('cardView').classList.contains('hidden');
+    }
+
+    const EXIT_CONFIRM_WINDOW_MS = 2000;
+    let exitArmedAt = 0;
+    let exitToastTimer = null;
+
+    function showExitToast() {
+      const toast = document.getElementById('exitToast');
+      toast.classList.add('show');
+      clearTimeout(exitToastTimer);
+      exitToastTimer = setTimeout(() => toast.classList.remove('show'), EXIT_CONFIRM_WINDOW_MS);
     }
 
     history.pushState({ appGuard: true }, '', location.href);
@@ -606,10 +643,13 @@
         if (currentIndex > 0) prevCard();
         else exitDeck();
       } else {
-        if (confirm('앱을 종료하시겠습니까?')) {
+        const now = Date.now();
+        if (now - exitArmedAt < EXIT_CONFIRM_WINDOW_MS) {
           history.back();
           return;
         }
+        exitArmedAt = now;
+        showExitToast();
       }
       history.pushState({ appGuard: true }, '', location.href);
     });
