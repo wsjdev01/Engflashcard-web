@@ -514,8 +514,8 @@
       document.getElementById('keywordContent').innerHTML = '<div class="loading">불러오는 중...</div>';
       currentKeywordIndex = null;
       try {
-        const texts = await Promise.all(Object.values(DECKS).map(d => fetch(d.csvUrl).then(r => r.text())));
-        keywordCards = texts.flatMap(parseCSV).filter(c => c.keyword);
+        const text = await fetch(DECKS.books.csvUrl).then(r => r.text());
+        keywordCards = parseCSV(text).filter(c => c.keyword);
         uniqueKeywords = [...new Set(keywordCards.map(c => c.keyword))];
         renderKeywordIndex();
       } catch (e) {
