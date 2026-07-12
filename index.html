@@ -584,6 +584,38 @@
         document.getElementById('card').innerHTML = `<div class="error">데이터를 불러오지 못했어요.<br>CSV 링크를 확인해주세요.</div>`;
       }
     }
+
+    // ── Back button guard ───────────────────────────────────────
+    // 안드로이드/브라우저 뒤로가기 시 바로 종료되지 않도록 history에 buffer entry를 유지한다.
+    // 카드뷰/리스트뷰에서는 앱 내 뒤로가기로 처리하고, 홈 화면에서만 종료 확인창을 띄운다.
+
+    function isListOpen() {
+      return document.getElementById('listView').classList.contains('open');
+    }
+
+    function isCardViewOpen() {
+      return !document.getElementById('cardView').classList.contains('hidden');
+    }
+
+    history.pushState({ appGuard: true }, '', location.href);
+
+    window.addEventListener('popstate', () => {
+      if (isListOpen()) {
+        closeList();
+        history.pushState({ appGuard: true }, '', location.href);
+        return;
+      }
+      if (isCardViewOpen()) {
+        exitDeck();
+        history.pushState({ appGuard: true }, '', location.href);
+        return;
+      }
+      if (confirm('앱을 종료하시겠습니까?')) {
+        history.back();
+      } else {
+        history.pushState({ appGuard: true }, '', location.href);
+      }
+    });
   </script>
 </body>
 </html>
