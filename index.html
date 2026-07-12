@@ -199,16 +199,16 @@
       <div class="deck-card" onclick="enterDeck('books')">
         <div class="deck-icon">📚</div>
         <div class="deck-info">
-          <div class="deck-name">도서 카드</div>
-          <div class="deck-desc">교재 문장 학습</div>
+          <div class="deck-name">교재 영어 예문</div>
+          <div class="deck-desc">출처: [도서] 네이티브 영어 표현력 사전</div>
         </div>
         <div class="deck-arrow">›</div>
       </div>
       <div class="deck-card" onclick="enterDeck('youtube')">
         <div class="deck-icon">📺</div>
         <div class="deck-info">
-          <div class="deck-name">유튜브 카드</div>
-          <div class="deck-desc">유튜브 영상 문장</div>
+          <div class="deck-name">YouTube 영어 예문</div>
+          <div class="deck-desc">출처: YouTube</div>
         </div>
         <div class="deck-arrow">›</div>
       </div>
@@ -263,12 +263,12 @@
   <script>
     const DECKS = {
       books: {
-        name: '도서 카드',
+        name: '교재 영어 예문',
         csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTw9hzCMBy2uKaS5VP5oc5ShljTICePzVFr6bqbrnXoHoqsziFvFNiCZuipqBqf28bQMCE-swMWACbH/pub?gid=0&single=true&output=csv',
         storageKey: 'engflashcard_state_books'
       },
       youtube: {
-        name: '유튜브 카드',
+        name: 'YouTube 영어 예문',
         csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTw9hzCMBy2uKaS5VP5oc5ShljTICePzVFr6bqbrnXoHoqsziFvFNiCZuipqBqf28bQMCE-swMWACbH/pub?gid=915780563&single=true&output=csv',
         storageKey: 'engflashcard_state_youtube'
       }
