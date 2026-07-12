@@ -230,13 +230,14 @@
   <!-- Keyword view -->
   <div class="list-view" id="keywordView">
     <div class="list-header">
-      <button class="home-btn" onclick="closeKeywordView()" aria-label="뒤로">
+      <button class="home-btn" onclick="exitKeywordView()" aria-label="홈으로">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M3 11.5 12 4l9 7.5"/>
           <path d="M5.5 10v9a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-9"/>
           <path d="M9.5 20v-6h5v6"/>
         </svg>
       </button>
+      <button class="list-back hidden" id="keywordBackBtn" onclick="renderKeywordIndex()">← 목록</button>
       <span class="list-title" id="keywordTitle"></span>
     </div>
     <div class="list-content" id="keywordContent"></div>
@@ -520,7 +521,8 @@
     async function openKeywordBrowse() {
       document.getElementById('homeView').classList.add('hidden');
       document.getElementById('keywordView').classList.add('open');
-      document.getElementById('keywordTitle').textContent = '키워드별 모아보기';
+      document.getElementById('keywordTitle').textContent = '키워드별 예문 보기';
+      document.getElementById('keywordBackBtn').classList.add('hidden');
       document.getElementById('keywordContent').innerHTML = '<div class="loading">불러오는 중...</div>';
       currentKeywordIndex = null;
       try {
@@ -535,7 +537,8 @@
 
     function renderKeywordIndex() {
       currentKeywordIndex = null;
-      document.getElementById('keywordTitle').textContent = '키워드별 모아보기';
+      document.getElementById('keywordTitle').textContent = '키워드별 예문 보기';
+      document.getElementById('keywordBackBtn').classList.add('hidden');
       const content = document.getElementById('keywordContent');
       if (uniqueKeywords.length === 0) {
         content.innerHTML = `<div class="empty-msg">아직 등록된 키워드가 없어요.</div>`;
@@ -552,6 +555,7 @@
       currentKeywordIndex = index;
       const keyword = uniqueKeywords[index];
       document.getElementById('keywordTitle').textContent = keyword;
+      document.getElementById('keywordBackBtn').classList.remove('hidden');
       const matched = keywordCards.filter(c => c.keyword === keyword);
       const groups = new Map();
       for (const c of matched) {
@@ -569,13 +573,9 @@
       `).join('');
     }
 
-    function closeKeywordView() {
-      if (currentKeywordIndex !== null) {
-        renderKeywordIndex();
-      } else {
-        document.getElementById('keywordView').classList.remove('open');
-        document.getElementById('homeView').classList.remove('hidden');
-      }
+    function exitKeywordView() {
+      document.getElementById('keywordView').classList.remove('open');
+      document.getElementById('homeView').classList.remove('hidden');
     }
 
     // ── Swipe ─────────────────────────────────────────────────
