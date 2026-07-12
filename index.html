@@ -160,6 +160,8 @@
     .divider { border: none; border-top: 1px dashed #e0e0e0; margin: 24px 0; }
     .english { font-size: 16px; color: #1a1a1a; opacity: 0.25; line-height: 1.6; font-style: italic; }
     .source { font-size: 11px; color: #ccc; text-align: right; margin-top: 10px; }
+    .source a { color: #4A90E2; text-decoration: none; font-weight: 600; }
+    .source a:active { opacity: 0.6; }
 
     .nav { display: flex; gap: 12px; margin-top: 20px; width: 100%; max-width: 480px; }
     .nav button { flex: 1; padding: 14px; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; }
@@ -373,9 +375,17 @@
         </div>
         <hr class="divider">
         <div class="english">${card.english}</div>
-        ${card.source ? `<div class="source">출처: ${card.source}</div>` : ''}
+        ${renderSource(card.source)}
       `;
       updateButtons();
+    }
+
+    function renderSource(source) {
+      if (!source) return '';
+      if (/^https?:\/\//i.test(source.trim())) {
+        return `<div class="source">출처: <a href="${source}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">영상 보기 ↗</a></div>`;
+      }
+      return `<div class="source">출처: ${source}</div>`;
     }
 
     // ── Navigation ───────────────────────────────────────────
