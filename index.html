@@ -208,19 +208,19 @@
         </div>
         <div class="deck-arrow">›</div>
       </div>
+      <div class="deck-card" onclick="openKeywordBrowse()">
+        <div class="deck-icon">🔑</div>
+        <div class="deck-info">
+          <div class="deck-name">키워드별 예문 보기</div>
+          <div class="deck-desc">출처: [도서] 네이티브 영어 표현력 사전</div>
+        </div>
+        <div class="deck-arrow">›</div>
+      </div>
       <div class="deck-card" onclick="enterDeck('youtube')">
         <div class="deck-icon">📺</div>
         <div class="deck-info">
           <div class="deck-name">YouTube 영어 예문</div>
           <div class="deck-desc">출처: YouTube</div>
-        </div>
-        <div class="deck-arrow">›</div>
-      </div>
-      <div class="deck-card" onclick="openKeywordBrowse()">
-        <div class="deck-icon">🔑</div>
-        <div class="deck-info">
-          <div class="deck-name">키워드별 모아보기</div>
-          <div class="deck-desc">단어/표현별로 예문 모아보기</div>
         </div>
         <div class="deck-arrow">›</div>
       </div>
@@ -230,7 +230,13 @@
   <!-- Keyword view -->
   <div class="list-view" id="keywordView">
     <div class="list-header">
-      <button class="list-back" onclick="closeKeywordView()">← 돌아가기</button>
+      <button class="home-btn" onclick="closeKeywordView()" aria-label="뒤로">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 11.5 12 4l9 7.5"/>
+          <path d="M5.5 10v9a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-9"/>
+          <path d="M9.5 20v-6h5v6"/>
+        </svg>
+      </button>
       <span class="list-title" id="keywordTitle"></span>
     </div>
     <div class="list-content" id="keywordContent"></div>
