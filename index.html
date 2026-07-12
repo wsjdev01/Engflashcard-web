@@ -286,12 +286,14 @@
       books: {
         name: '교재 영어 예문',
         csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTw9hzCMBy2uKaS5VP5oc5ShljTICePzVFr6bqbrnXoHoqsziFvFNiCZuipqBqf28bQMCE-swMWACbH/pub?gid=0&single=true&output=csv',
-        storageKey: 'engflashcard_state_books'
+        storageKey: 'engflashcard_state_books',
+        colMap: { english: 0, meaning: 1, explanation: 2, source: 3, keyword: 4, keywordMeaning: 5 }
       },
       youtube: {
         name: 'YouTube 영어 예문',
         csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTw9hzCMBy2uKaS5VP5oc5ShljTICePzVFr6bqbrnXoHoqsziFvFNiCZuipqBqf28bQMCE-swMWACbH/pub?gid=915780563&single=true&output=csv',
-        storageKey: 'engflashcard_state_youtube'
+        storageKey: 'engflashcard_state_youtube',
+        colMap: { english: 0, meaning: 1, explanation: 2, source: 3 }
       }
     };
 
@@ -324,13 +326,15 @@
       return result;
     }
 
-    function parseCSV(text) {
+    function parseCSV(text, colMap) {
       const lines = text.trim().split('\n');
       return lines.slice(1).map(line => {
         const cols = parseCSVLine(line);
         return {
-          meaning: cols[0]||'', english: cols[1]||'', explanation: cols[2]||'', source: cols[3]||'',
-          keyword: cols[4]||'', keywordMeaning: cols[5]||''
+          meaning: cols[colMap.meaning]||'', english: cols[colMap.english]||'',
+          explanation: cols[colMap.explanation]||'', source: cols[colMap.source]||'',
+          keyword: colMap.keyword !== undefined ? (cols[colMap.keyword]||'') : '',
+          keywordMeaning: colMap.keywordMeaning !== undefined ? (cols[colMap.keywordMeaning]||'') : ''
         };
       }).filter(c => c.english);
     }
@@ -515,7 +519,7 @@
       currentKeywordIndex = null;
       try {
         const text = await fetch(DECKS.books.csvUrl).then(r => r.text());
-        keywordCards = parseCSV(text).filter(c => c.keyword);
+        keywordCards = parseCSV(text, DECKS.books.colMap).filter(c => c.keyword);
         uniqueKeywords = [...new Set(keywordCards.map(c => c.keyword))];
         renderKeywordIndex();
       } catch (e) {
@@ -614,7 +618,7 @@
       try {
         const res = await fetch(deck.csvUrl);
         const text = await res.text();
-        const fetched = parseCSV(text);
+        const fetched = parseCSV(text, deck.colMap);
         if (fetched.length === 0) {
           document.getElementById('card').innerHTML = `<div class="error" style="margin-top:40px">아직 카드가 없어요.<br>구글시트에 문장을 추가해보세요!</div>`;
           return;
