@@ -67,15 +67,20 @@
       width: 100%;
     }
     .header-left { display: flex; align-items: center; gap: 8px; }
-    .back-btn {
+    .home-btn {
       background: none;
       border: none;
-      font-size: 15px;
       color: #4A90E2;
-      font-weight: 600;
       cursor: pointer;
-      padding: 4px 0;
+      padding: 6px;
+      margin: -6px 0 -6px -6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      line-height: 0;
     }
+    .home-btn:active { background: #eaf1fb; }
     .counter { font-size: 14px; color: #999; }
     .hamburger {
       background: none;
@@ -220,7 +225,13 @@
   <div id="cardView" class="hidden">
     <div class="header">
       <div class="header-left">
-        <button class="back-btn" onclick="exitDeck()">← 목록</button>
+        <button class="home-btn" onclick="exitDeck()" aria-label="홈으로">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 11.5 12 4l9 7.5"/>
+            <path d="M5.5 10v9a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-9"/>
+            <path d="M9.5 20v-6h5v6"/>
+          </svg>
+        </button>
       </div>
       <div class="counter" id="counter"></div>
       <button class="hamburger" onclick="toggleMenu()">☰</button>
