@@ -43,13 +43,14 @@
       inset: 0;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
       padding: 60px 80px;
       opacity: 0;
       transform: translateX(40px);
       transition: all 0.4s ease;
       pointer-events: none;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
     .slide.active {
       opacity: 1;
@@ -63,6 +64,7 @@
     .slide-inner {
       width: 100%;
       max-width: 860px;
+      margin: auto;
     }
 
     /* Navigation */
@@ -441,6 +443,30 @@
             <p>☰ 메뉴, ★ 북마크, 공부한/저장한 카드 리스트, highWaterMark 이어보기 추가</p>
           </div>
         </div>
+        <div class="timeline-item">
+          <div class="tl-date">7월 2일</div>
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <h4>기획서 페이지 추가</h4>
+            <p>지금 보고 있는 이 프레젠테이션 형태의 기획서를 별도 페이지로 배포</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">7월 11일</div>
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <h4>홈 화면 도입 — 교재/유튜브 덱 분리</h4>
+            <p>단일 카드 목록에서 덱 선택형 홈 화면으로 구조 변경, 카드 출처(source) 표시 추가</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">7월 12일</div>
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <h4>키워드별 예문 보기 기능 신규 배포</h4>
+            <p>구글시트에 Keyword/Keyword Meaning 컬럼 추가, 키워드 → 의미별 그룹핑된 예문 모아보기 화면 신설. 홈 화면 문구·아이콘도 함께 정리</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -513,6 +539,13 @@
                 <p>구글시트 로딩에 인터넷 연결 필요. 오프라인 캐싱 미구현.</p>
               </div>
             </div>
+            <div class="list-item">
+              <div class="list-icon">⬅️</div>
+              <div class="list-text">
+                <h4>기기/브라우저 뒤로가기 커스터마이징 불가</h4>
+                <p>카드뷰에서 뒤로가기 시 한 장씩 이동, 홈에서는 종료 확인 후 종료되도록 시도했으나(pushState+popstate 방식), 삼성 인터넷·카카오톡 인앱 브라우저가 이 방식 자체를 무시해 실기기에서 전혀 동작하지 않아 원복함.</p>
+              </div>
+            </div>
           </div>
         </div>
         <div>
@@ -523,13 +556,6 @@
               <div class="list-text">
                 <h4>서버 저장 + 로그인</h4>
                 <p>기기 간 동기화를 위한 계정 기능 및 서버 저장소 도입.</p>
-              </div>
-            </div>
-            <div class="list-item">
-              <div class="list-icon">💡</div>
-              <div class="list-text">
-                <h4>키워드 힌트 컬럼</h4>
-                <p>구글시트 4번째 컬럼에 핵심 키워드 추가, 카드에 힌트로 표시.</p>
               </div>
             </div>
             <div class="list-item">
