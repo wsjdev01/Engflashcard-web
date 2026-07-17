@@ -171,12 +171,12 @@
     .btn-next.disabled { background: #e8e8e8; color: #aaa; }
 
     /* ── List view ── */
-    .list-view { display: none; flex-direction: column; min-height: 100vh; background: #f5f5f5; }
+    .list-view { display: none; flex-direction: column; height: 100vh; height: 100dvh; overflow: hidden; background: #f5f5f5; }
     .list-view.open { display: flex; }
-    .list-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: white; border-bottom: 1px solid #ebebeb; }
+    .list-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: white; border-bottom: 1px solid #ebebeb; flex-shrink: 0; }
     .list-back { background: none; border: none; font-size: 16px; color: #4A90E2; cursor: pointer; font-weight: 600; padding: 0; flex-shrink: 0; }
     .list-title { font-size: 16px; font-weight: 600; color: #1a1a1a; }
-    .list-content { flex: 1; overflow-y: auto; padding: 12px 20px 20px; max-width: 520px; width: 100%; margin: 0 auto; }
+    .list-content { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 12px 20px 20px; max-width: 520px; width: 100%; margin: 0 auto; }
     .list-item { background: white; border-radius: 12px; padding: 14px 16px; margin-bottom: 8px; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.06); display: flex; align-items: center; gap: 12px; }
     .list-item:active { background: #f0f7ff; }
     .list-item-num { font-size: 12px; color: #ccc; min-width: 28px; text-align: right; flex-shrink: 0; }
@@ -542,6 +542,7 @@
       document.getElementById('keywordTitle').textContent = '키워드별 예문 보기';
       document.getElementById('keywordBackBtn').classList.add('hidden');
       const content = document.getElementById('keywordContent');
+      content.scrollTop = 0;
       if (uniqueKeywords.length === 0) {
         content.innerHTML = `<div class="empty-msg">아직 등록된 키워드가 없어요.</div>`;
         return;
@@ -568,7 +569,9 @@
         if (!groups.has(m)) groups.set(m, []);
         groups.get(m).push(c);
       }
-      document.getElementById('keywordContent').innerHTML = [...groups.entries()].map(([meaning, list]) => `
+      const content = document.getElementById('keywordContent');
+      content.scrollTop = 0;
+      content.innerHTML = [...groups.entries()].map(([meaning, list]) => `
         ${meaning ? `<div class="keyword-meaning-heading">${meaning}</div>` : ''}
         ${list.map(c => `
           <div class="list-item static">
