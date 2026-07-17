@@ -181,6 +181,7 @@
     .list-item:active { background: #f0f7ff; }
     .list-item-num { font-size: 12px; color: #ccc; min-width: 28px; text-align: right; flex-shrink: 0; }
     .list-item-meaning { font-size: 15px; color: #1a1a1a; line-height: 1.4; }
+    .keyword-pos { font-size: 12px; color: #9a9a9a; font-weight: 400; margin-right: 6px; }
     .list-item.static { cursor: default; }
     .list-item.static:active { background: white; }
     .keyword-meaning-heading { font-size: 13px; font-weight: 700; color: #4A90E2; margin: 20px 4px 8px; }
@@ -200,18 +201,18 @@
     <div class="home-title">Flash Card</div>
     <div class="home-heading">학습할 목록을 선택하세요</div>
     <div class="deck-list">
-      <div class="deck-card" onclick="enterDeck('books')">
-        <div class="deck-icon">📚</div>
-        <div class="deck-info">
-          <div class="deck-name">교재 영어 예문</div>
-          <div class="deck-desc">출처: [도서] 네이티브 영어 표현력 사전</div>
-        </div>
-        <div class="deck-arrow">›</div>
-      </div>
       <div class="deck-card" onclick="openKeywordBrowse()">
         <div class="deck-icon">🔑</div>
         <div class="deck-info">
           <div class="deck-name">키워드별 예문 보기</div>
+          <div class="deck-desc">출처: [도서] 네이티브 영어 표현력 사전</div>
+        </div>
+        <div class="deck-arrow">›</div>
+      </div>
+      <div class="deck-card" onclick="enterDeck('books')">
+        <div class="deck-icon">📚</div>
+        <div class="deck-info">
+          <div class="deck-name">교재 영어 예문</div>
           <div class="deck-desc">출처: [도서] 네이티브 영어 표현력 사전</div>
         </div>
         <div class="deck-arrow">›</div>
@@ -294,7 +295,7 @@
         name: '교재 영어 예문',
         csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTw9hzCMBy2uKaS5VP5oc5ShljTICePzVFr6bqbrnXoHoqsziFvFNiCZuipqBqf28bQMCE-swMWACbH/pub?gid=0&single=true&output=csv',
         storageKey: 'engflashcard_state_books',
-        colMap: { english: 0, meaning: 1, explanation: 2, source: 3, keyword: 4, keywordMeaning: 5 }
+        colMap: { english: 0, meaning: 1, explanation: 2, source: 3, partOfSpeech: 4, keyword: 5, keywordMeaning: 6 }
       },
       youtube: {
         name: 'YouTube 영어 예문',
@@ -341,7 +342,8 @@
           meaning: cols[colMap.meaning]||'', english: cols[colMap.english]||'',
           explanation: cols[colMap.explanation]||'', source: cols[colMap.source]||'',
           keyword: colMap.keyword !== undefined ? (cols[colMap.keyword]||'') : '',
-          keywordMeaning: colMap.keywordMeaning !== undefined ? (cols[colMap.keywordMeaning]||'') : ''
+          keywordMeaning: colMap.keywordMeaning !== undefined ? (cols[colMap.keywordMeaning]||'') : '',
+          partOfSpeech: colMap.partOfSpeech !== undefined ? (cols[colMap.partOfSpeech]||'') : ''
         };
       }).filter(c => c.english);
     }
@@ -544,11 +546,14 @@
         content.innerHTML = `<div class="empty-msg">아직 등록된 키워드가 없어요.</div>`;
         return;
       }
-      content.innerHTML = uniqueKeywords.map((k, i) => `
+      content.innerHTML = uniqueKeywords.map((k, i) => {
+        const pos = (keywordCards.find(c => c.keyword === k) || {}).partOfSpeech || '';
+        return `
         <div class="list-item" onclick="renderKeywordDetail(${i})">
-          <div class="list-item-meaning">${k}</div>
+          <div class="list-item-meaning">${pos ? `<span class="keyword-pos">${pos}</span>` : ''}${k}</div>
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
 
     function renderKeywordDetail(index) {
