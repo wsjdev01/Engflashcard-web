@@ -49,3 +49,10 @@
 ## 참고: 포트폴리오
 - `~/portfolio/index.html`은 플래시카드 프로젝트 소개 카드 + 링크만 있음, 상세 내용은 전부 `proposal.html`(engflashcard-web 저장소 소속) 쪽에 있음
 - "포트폴리오에 반영해줘" 요청이 와도 실제 커밋은 **engflashcard-web** 쪽에서 진행
+
+## 세션 로그
+### 2026-08-23
+- 오랜만에 재접속 → 이전 작업 내용 파악 요청 → 기존 메모리(2026-07-17 기준) 내용을 정리해서 요약 보고
+- 앞으로 세션 간 인수인계용으로 이 `progress.md` 파일을 신규 생성 (기존엔 Claude 메모리 시스템에만 기록돼 있었음)
+- 커밋(`e029b54`)·푸시 완료 — 인증정보 파일(`google_oauth_client.json`, `sheets_token.json`, `youtube_token.json`)은 그대로 untracked 상태 유지, `progress.md`만 커밋
+- 코드 변경/배포는 없었음, 문서 정리만 진행한 세션
