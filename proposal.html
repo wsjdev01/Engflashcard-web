@@ -483,6 +483,30 @@
             <p>목록을 스크롤해도 상단 내비게이션 헤더가 항상 고정 노출되도록 레이아웃 수정, 상세 화면 진입 시 스크롤 위치가 이전 화면 위치를 물려받던 버그 수정</p>
           </div>
         </div>
+        <div class="timeline-item">
+          <div class="tl-date">8월 23일</div>
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <h4>유튜브 자막 자동화 재개 + 매일 자동 실행</h4>
+            <p>IP 차단이 풀린 것을 확인하고 파이프라인 재가동. 컬럼 순서·인증 토큰 갱신 버그 수정, Anthropic API 키 안전 저장 체계(.env) 구축. macOS 스케줄러(launchd)로 매일 아침 9시 자동 실행 등록 — 이제 좋아요만 누르면 자막 추출부터 한국어 뜻 생성까지 무인 처리됨</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">8월 23일</div>
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <h4>YouTube 카드 레이아웃 반전</h4>
+            <p>교재 카드는 한글 뜻이 크게 나오는 기존 방식 유지, YouTube 카드만 영어 문장이 크게·한글 뜻이 작게 나오도록 변경</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">8월 23일</div>
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <h4>CSV 줄바꿈 파싱 버그 수정</h4>
+            <p>구글시트 셀 안에 줄바꿈이 들어간 경우 카드가 여러 개로 깨져 나오던 문제 발견·수정. 줄 단위가 아니라 따옴표 상태를 추적하며 전체 텍스트를 파싱하도록 개선</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -519,6 +543,13 @@
           <div class="list-text">
             <h4>비개발자 바이브코딩으로 완성</h4>
             <p>코드 한 줄 직접 작성하지 않고, Claude Code와 대화만으로 실서비스 배포.</p>
+          </div>
+        </div>
+        <div class="list-item">
+          <div class="list-icon">📺</div>
+          <div class="list-text">
+            <h4>유튜브 좋아요 → 카드 자동 생성</h4>
+            <p>영상에 좋아요만 누르면, 매일 아침 자동으로 자막 추출·문장 정리·한국어 뜻 생성(Claude API)까지 마쳐서 시트에 채워짐. 사람이 직접 타이핑할 필요 없음.</p>
           </div>
         </div>
       </div>
@@ -579,13 +610,6 @@
               <div class="list-text">
                 <h4>학습 통계</h4>
                 <p>일별 학습량, 북마크 카드 정답률 등 학습 데이터 시각화.</p>
-              </div>
-            </div>
-            <div class="list-item">
-              <div class="list-icon">🔄</div>
-              <div class="list-text">
-                <h4>유튜브 자막 자동 추출 완전 자동화</h4>
-                <p>좋아요한 영상 자막 자동 추출이 IP 차단으로 막혀있음. 프록시(Webshare 등) 연동 + 스케줄러(launchd) 등록 시 "좋아요 → 시트 자동 반영"까지 무인화 가능.</p>
               </div>
             </div>
           </div>
