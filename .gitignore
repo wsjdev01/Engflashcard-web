@@ -1,0 +1,13 @@
+# 인증/키 파일 — 절대 커밋 금지
+.env
+google_oauth_client.json
+sheets_token.json
+youtube_token.json
+
+# 생성되는 임시 데이터
+youtube_liked_captions.csv
+
+# OS/파이썬 잡파일
+.DS_Store
+__pycache__/
+*.pyc
