@@ -9,6 +9,10 @@
 - GitHub: `git@github.com:wsjdev01/Engflashcard-web.git` → `~/engflashcard-web/` (main 브랜치, push하면 Vercel 자동 배포, 1~2분 소요)
 - 구글 시트: https://docs.google.com/spreadsheets/d/107UOIQE9trA6lvoSMSmxRxGHKNt2rVakCBCyVsQItPA/edit
 
+## 운영 비용
+- **Anthropic API 크레딧**: 2026-08-23, $5 결제 (console.anthropic.com, "No expiration" 키). YouTube 탭 자동 한국어 뜻 생성(Claude Haiku 4.5)에 사용 중. 문장당 비용이 매우 낮아(1센트 미만) 당분간 추가 결제 불필요할 것으로 예상. 잔액 확인은 console.anthropic.com → Billing에서 가능.
+- claude.ai 구독(Claude Pro 등)과 이 API 크레딧은 **별도 과금** — 서로 무관함.
+
 ## 구글 시트 구조
 - **Book 탭 (gid=0)**: A=Sentence(영어), B=Sentence meaning(의미), C=Comment(설명), D=Source(출처), E=Part of speech(품사), F=Keyword, G=Keyword meaning
 - **YouTube 탭 (gid=915780563)**: A=English, B=Korean, C=Comment, D=Source (keyword 컬럼 없음)
