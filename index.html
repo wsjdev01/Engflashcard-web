@@ -315,30 +315,48 @@
 
     // ── CSV ──────────────────────────────────────────────────
 
-    function parseCSVLine(line) {
-      const result = [];
-      let current = '';
+    // 셀 안에 줄바꿈이 들어있어도(따옴표로 감싸진 필드) 깨지지 않도록,
+    // 줄 단위가 아니라 텍스트 전체를 한 번에 훑으면서 따옴표 안/밖 상태로 행을 구분함
+    function parseCSVRows(text) {
+      const rows = [];
+      let row = [];
+      let field = '';
       let inQuotes = false;
-      for (let i = 0; i < line.length; i++) {
-        const ch = line[i];
-        if (ch === '"') {
-          if (inQuotes && line[i+1] === '"') { current += '"'; i++; }
-          else inQuotes = !inQuotes;
-        } else if (ch === ',' && !inQuotes) {
-          result.push(current.trim());
-          current = '';
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        if (inQuotes) {
+          if (ch === '"') {
+            if (text[i + 1] === '"') { field += '"'; i++; }
+            else inQuotes = false;
+          } else {
+            field += ch;
+          }
+        } else if (ch === '"') {
+          inQuotes = true;
+        } else if (ch === ',') {
+          row.push(field.trim());
+          field = '';
+        } else if (ch === '\r') {
+          // 무시, \n에서 처리
+        } else if (ch === '\n') {
+          row.push(field.trim());
+          rows.push(row);
+          row = [];
+          field = '';
         } else {
-          current += ch;
+          field += ch;
         }
       }
-      result.push(current.trim());
-      return result;
+      if (field.length > 0 || row.length > 0) {
+        row.push(field.trim());
+        rows.push(row);
+      }
+      return rows;
     }
 
     function parseCSV(text, colMap) {
-      const lines = text.trim().split('\n');
-      return lines.slice(1).map(line => {
-        const cols = parseCSVLine(line);
+      const rows = parseCSVRows(text.trim());
+      return rows.slice(1).map(cols => {
         return {
           meaning: cols[colMap.meaning]||'', english: cols[colMap.english]||'',
           explanation: cols[colMap.explanation]||'', source: cols[colMap.source]||'',

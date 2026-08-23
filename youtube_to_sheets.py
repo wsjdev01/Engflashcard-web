@@ -182,7 +182,11 @@ def get_korean_meaning(claude, sentence):
                 ),
             }]
         )
-        return msg.content[0].text.strip()
+        result = msg.content[0].text.strip()
+        # 가끔 프롬프트를 무시하고 줄바꿈 섞인 여러 뜻을 줄 때가 있음 — 구글시트 CSV 내보내기에서
+        # 셀 안 줄바꿈이 파싱을 깨뜨리므로(카드가 여러 개로 쪼개져 나옴), 한 줄로 합쳐둠
+        result = re.sub(r'\s*\n+\s*', ' / ', result).strip()
+        return result
     except Exception as e:
         print(f'  ⚠️  Claude API 오류: {e}')
         return ''
