@@ -104,7 +104,9 @@ def collapse_repetitions(s):
         return s
     # Strip punctuation from each word for comparison only
     norm_words = [re.sub(r'[.!?,;]+$', '', w) for w in words]
-    for length in range(n // 2, 2, -1):
+    # 짧은 반복 단위부터 검사해야 최소 주기를 찾음 (긴 것부터 찾으면 "여러 번 겹친 덩어리"를
+    # 하나의 반복 단위로 착각해서, 실제로 한 번만 나온 문장을 여러 번 남기는 버그가 있었음)
+    for length in range(3, n // 2 + 1):
         phrase = tuple(norm_words[:length])
         pos, count = length, 1
         while pos + length <= n:
