@@ -301,7 +301,8 @@
         name: 'YouTube 영어 예문',
         csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTw9hzCMBy2uKaS5VP5oc5ShljTICePzVFr6bqbrnXoHoqsziFvFNiCZuipqBqf28bQMCE-swMWACbH/pub?gid=915780563&single=true&output=csv',
         storageKey: 'engflashcard_state_youtube',
-        colMap: { english: 0, meaning: 1, explanation: 2, source: 3 }
+        colMap: { english: 0, meaning: 1, explanation: 2, source: 3 },
+        reverseLayout: true
       }
     };
 
@@ -403,15 +404,19 @@
     function renderCard() {
       const card = cards[currentIndex];
       const isBookmarked = bookmarks.has(card.english);
+      // YouTube 덱만 위/아래를 뒤집어서 영어 문장이 크게, 한글 뜻이 작게 나오도록 함
+      const reversed = !!DECKS[currentDeckId].reverseLayout;
+      const topText = reversed ? card.english : card.meaning;
+      const bottomText = reversed ? card.meaning : card.english;
       document.getElementById('counter').textContent = `${currentIndex + 1} / ${cards.length}`;
       document.getElementById('card').innerHTML = `
         <button class="bookmark-btn" onclick="toggleBookmark()">${isBookmarked ? '★' : '☆'}</button>
         <div class="top-section">
-          <div class="meaning">${card.meaning}</div>
+          <div class="meaning">${topText}</div>
           ${card.explanation ? `<div class="explanation">${card.explanation}</div>` : ''}
         </div>
         <hr class="divider">
-        <div class="english">${card.english}</div>
+        <div class="english">${bottomText}</div>
         ${renderSource(card.source)}
       `;
       updateButtons();
